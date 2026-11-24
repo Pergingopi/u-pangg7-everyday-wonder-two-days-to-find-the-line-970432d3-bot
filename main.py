@@ -47,7 +47,10 @@ def main():
     assert ENTRY == ENTRY.strip(), "ENTRY must not have leading/trailing whitespace"
     assert "\n" not in ENTRY and "\r" not in ENTRY, "ENTRY must be a single line"
     assert ENTRY.endswith("."), "ENTRY must end with a single terminator"
-    assert ENTRY.count(".") == 1, "ENTRY must be exactly one sentence"
+    # Exactly one sentence terminator in total, and it is the final
+    # character: counting only "." would let a second sentence ending in
+    # "!" or "?" slip through unnoticed.
+    assert sum(ENTRY.count(c) for c in ".!?") == 1, "ENTRY must be exactly one sentence"
     data = ENTRY.encode("utf-8")
     assert 1 <= len(data) <= 200, "entry.txt must be 1-200 bytes"
     tmp = os.path.join(out_dir, ".entry.txt.tmp")
